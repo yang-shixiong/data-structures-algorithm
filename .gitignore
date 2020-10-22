@@ -15,10 +15,6 @@ build
 classes
 bin/
 out
-application-*.yml
-!application-default.yml
-!application-kubernetes.yml
-!application-test.yml
 .classpath
 .project
 .settings
