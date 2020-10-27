@@ -5,10 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description:
@@ -60,7 +57,6 @@ public class HuffmanCompressString {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
     }
@@ -76,6 +72,7 @@ public class HuffmanCompressString {
 
         while (list.size() > 1) {
             sort(list);
+//            Collections.sort(list);
             HuffNode second = list.remove(1);
             HuffNode first = list.remove(0);
             HuffNode huffNode = new HuffNode(second.weight + first.weight);
@@ -86,8 +83,8 @@ public class HuffmanCompressString {
         HuffNode root = list.get(0);
         getCodes(root, null, null);
         StringBuilder huffmanStr = new StringBuilder();
-        for (byte aByte : bytes) {
-            huffmanStr.append(huffmanCode.get(aByte));
+        for (byte code : bytes) {
+            huffmanStr.append(huffmanCode.get(code));
         }
         byte[] arr = new byte[huffmanStr.length() % 8 == 0 ? huffmanStr.length() / 8 : huffmanStr.length() / 8 + 1];
         int index = 0;
