@@ -5,7 +5,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description:
@@ -13,14 +16,14 @@ import java.util.*;
  * @author mark
  * Date 2020/10/27
  */
-public class HuffmanCompressString {
+public class HuffmanCompress {
 
     public static Map<Byte, String> huffmanCode = new HashMap<>();
 
-    public static void main(String[] args) throws IOException {
-        String str = "i like like like java do you like a java";
-        compressString(str);
-        compressFile("E:\\ss.png", "E:\\s2.png");
+    public static void main(String[] args) {
+//        String str = "i like like like java do you like a java";
+//        compressString(str);
+        compressFile("E:\\src.bmp", "E:\\s2.png");
     }
 
     public static void compressString(String str) {
@@ -62,25 +65,9 @@ public class HuffmanCompressString {
     }
 
     public static byte[] huffmanZip(byte[] bytes) {
-        Map<Byte, Integer> map = new HashMap<>();
-        for (byte aByte : bytes) {
-            Integer count = map.computeIfAbsent(aByte, k -> 0);
-            map.put(aByte, count + 1);
-        }
-        List<HuffNode> list = new ArrayList<>();
-        map.forEach((value, weight) -> list.add(new HuffNode(value, weight)));
+        List<HuffNode> list = getHuffNodes(bytes);
 
-        while (list.size() > 1) {
-            sort(list);
-//            Collections.sort(list);
-            HuffNode second = list.remove(1);
-            HuffNode first = list.remove(0);
-            HuffNode huffNode = new HuffNode(second.weight + first.weight);
-            huffNode.right = first;
-            huffNode.left = second;
-            list.add(huffNode);
-        }
-        HuffNode root = list.get(0);
+        HuffNode root = makeHuffTree(list);
         getCodes(root, null, null);
         StringBuilder huffmanStr = new StringBuilder();
         for (byte code : bytes) {
@@ -89,14 +76,41 @@ public class HuffmanCompressString {
         byte[] arr = new byte[huffmanStr.length() % 8 == 0 ? huffmanStr.length() / 8 : huffmanStr.length() / 8 + 1];
         int index = 0;
         for (int i = 0; i < huffmanStr.length(); i += 8) {
-            if (i + 8 < huffmanStr.length()) {
-                arr[index] = (byte) Integer.parseInt(huffmanStr.substring(i, i + 8), 2);
-            } else {
+            if (i + 8 > huffmanStr.length()) {
                 arr[index] = (byte) Integer.parseInt(huffmanStr.substring(i), 2);
+            } else {
+                arr[index] = (byte) Integer.parseInt(huffmanStr.substring(i, i + 8), 2);
             }
             index++;
         }
         return arr;
+    }
+
+    private static HuffNode makeHuffTree(List<HuffNode> list) {
+        while (list.size() > 1) {
+            sort(list);
+//            Collections.sort(list);
+            HuffNode first = list.get(0);
+            HuffNode second = list.get(1);
+            HuffNode huffNode = new HuffNode(second.weight + first.weight);
+            huffNode.left = first;
+            huffNode.right = second;
+            list.remove(first);
+            list.remove(second);
+            list.add(huffNode);
+        }
+        return list.get(0);
+    }
+
+    private static List<HuffNode> getHuffNodes(byte[] bytes) {
+        Map<Byte, Integer> map = new HashMap<>();
+        for (byte aByte : bytes) {
+            Integer count = map.computeIfAbsent(aByte, k -> 0);
+            map.put(aByte, count + 1);
+        }
+        List<HuffNode> list = new ArrayList<>();
+        map.forEach((value, weight) -> list.add(new HuffNode(value, weight)));
+        return list;
     }
 
     public static void getCodes(HuffNode node, String road, StringBuilder stringBuilder) {
@@ -120,25 +134,24 @@ public class HuffmanCompressString {
         for (int i = 0; i < huffmanBytes.length; i++) {
             stringBuilder.append(byteToBitString(!(i == huffmanBytes.length - 1), huffmanBytes[i]));
         }
+
         Map<String, Byte> map = new HashMap<>();
         huffmanCode.forEach((value, str) -> map.put(str, value));
-
         String value = "";
         List<Byte> list = new ArrayList<>();
         int index = 0;
         while (true) {
             value += stringBuilder.charAt(index);
-            if (index == stringBuilder.length() - 1) {
-                Byte aByte = map.get(value);
-                list.add(aByte);
-                break;
-            }
             if (map.get(value) != null) {
                 list.add(map.get(value));
                 value = "";
             }
             index++;
+            if (index == stringBuilder.length()) {
+                break;
+            }
         }
+
         byte[] result = new byte[list.size()];
 
         for (int i = 0; i < list.size(); i++) {
@@ -175,10 +188,10 @@ public class HuffmanCompressString {
     public static void heapSort(List<HuffNode> list, int n, int length) {
         HuffNode temp = list.get(n);
         for (int k = 2 * n + 1; k < length; k = 2 * k + 1) {
-            if (k + 1 < length && list.get(k).weight < list.get(k + 1).weight) {
+            if (k + 1 < length && list.get(k).weight <= list.get(k + 1).weight) {
                 k++;
             }
-            if (temp.weight < list.get(k).weight) {
+            if (temp.weight <= list.get(k).weight) {
                 list.set(n, list.get(k));
                 n = k;
             } else {
