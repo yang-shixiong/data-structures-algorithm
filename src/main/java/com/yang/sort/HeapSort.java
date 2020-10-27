@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class HeapSort {
 
     public static void main(String[] args) {
-        int[] array = {2, 7, 9, 3, 8, -1, 34};
+        int[] array = {12,11,10,9,8,7,6,5,4,3,2,1};
 
         for (int i = array.length / 2 - 1; i >= 0; i--) {
             sort(array, i, array.length);
@@ -21,7 +21,6 @@ public class HeapSort {
             array[j] = array[0];
             array[0] = temp;
             sort(array, 0, j);
-
         }
         System.out.println(Arrays.toString(array));
     }
@@ -32,7 +31,7 @@ public class HeapSort {
             if (k + 1 < length && arr[k] < arr[k + 1]) {
                 k++;
             }
-            if (arr[i] < arr[k]) {
+            if (temp < arr[k]) {
                 arr[i] = arr[k];
                 i = k;
             } else {
@@ -40,8 +39,5 @@ public class HeapSort {
             }
         }
         arr[i] = temp;
-
     }
-
-
 }
