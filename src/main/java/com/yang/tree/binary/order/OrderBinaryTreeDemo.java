@@ -24,7 +24,6 @@ public class OrderBinaryTreeDemo {
 class OrderBinaryTree {
     Node root;
 
-
     public void add(Node node) {
         if (root == null) {
             root = node;
