@@ -22,9 +22,15 @@ public class HuffmanCompressString {
 
     public static void main(String[] args) throws IOException {
         String str = "i like like like java do you like a java";
-        byte[] codes = str.getBytes();
-//        huffmanZip(codes);
+        compressString(str);
         compressFile("E:\\ss.png", "E:\\s2.png");
+    }
+
+    public static void compressString(String str) {
+        byte[] codes = str.getBytes();
+        byte[] bytes = huffmanZip(codes);
+        byte[] result = decode(bytes);
+        System.out.println(new String(result));
     }
 
     public static void compressFile(String src, String dts) {
@@ -78,7 +84,7 @@ public class HuffmanCompressString {
             list.add(huffNode);
         }
         HuffNode root = list.get(0);
-        getCodes(root);
+        getCodes(root, null, null);
         StringBuilder huffmanStr = new StringBuilder();
         for (byte aByte : bytes) {
             huffmanStr.append(huffmanCode.get(aByte));
@@ -96,19 +102,10 @@ public class HuffmanCompressString {
         return arr;
     }
 
-    private static void getCodes(HuffNode root) {
-        if (root == null) {
-            return;
-        }
-        //����root��������
-        getCodes(root.left, "0", new StringBuilder());
-        //����root��������
-        getCodes(root.right, "1", new StringBuilder());
-    }
-
     public static void getCodes(HuffNode node, String road, StringBuilder stringBuilder) {
-        StringBuilder builder = new StringBuilder(stringBuilder);
-        builder.append(road);
+        StringBuilder builder = stringBuilder == null ? new StringBuilder() : new StringBuilder(stringBuilder);
+        if (road != null)
+            builder.append(road);
         if (node.value != null) {
             huffmanCode.put(node.value, builder.toString());
         } else {
