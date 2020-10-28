@@ -16,6 +16,7 @@ public class BinarySearch {
         List<Integer> list = new ArrayList<>();
         binarySearch(0, arr.length, 1000, arr, list);
         System.out.println(list);
+        System.out.println(binarySearchNoRecursion(arr, 10));
     }
 
     public static void binarySearch(int left, int right, int target, int[] arr, List<Integer> indexes) {
@@ -42,5 +43,24 @@ public class BinarySearch {
             }
         }
 
+    }
+
+    public static int binarySearchNoRecursion(int[] arr, int target) {
+        int left = 0;
+        int right = arr.length -1;
+        while (left <= right){
+            int pivot = (left + right) / 2;
+
+            if(arr[pivot] == target){
+                return pivot;
+            }else {
+                if(arr[pivot] > target){
+                    right = pivot - 1;
+                }else {
+                    left = pivot +1;
+                }
+            }
+        }
+        return -1;
     }
 }
