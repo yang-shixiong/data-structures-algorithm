@@ -1,5 +1,7 @@
 package com.yang.algorithm;
 
+import java.util.Arrays;
+
 /**
  * Description:
  *
@@ -14,6 +16,7 @@ public class MatchString {
         useSubString(str1, target);
         useNothing(str1, target);
         useWhile(str1, target);
+        useKmp(str1, target);
     }
 
     public static void useSubString(String str1, String target) {
@@ -58,5 +61,36 @@ public class MatchString {
         if (j == targetArr.length) {
             System.out.println("find it: " + (i - j));
         }
+    }
+
+    public static void useKmp(String str1, String target){
+        int[] next = createKmpNext(target);
+        for (int i = 0, j = 0; i < str1.length(); i++) {
+            while (j > 0 && str1.charAt(i) != target.charAt(j)){
+                j = next[j-1];
+            }
+            if(str1.charAt(i) == target.charAt(j)){
+                j ++;
+            }
+            if(j == target.length()){
+                System.out.println("find it: " + (i - target.length() + 1));
+                break;
+            }
+        }
+    }
+
+    public static int[] createKmpNext(String target){
+        int[] next = new int[target.length()];
+        next[0] = 0;
+        for (int i = 1, j = 0; i < target.length(); i++) {
+            while (j > 0 && target.charAt(i) != target.charAt(j)){
+                j = next[j-1];
+            }
+            if(target.charAt(i) == target.charAt(j)){
+                j ++;
+            }
+            next[i] = j;
+        }
+        return next;
     }
 }
