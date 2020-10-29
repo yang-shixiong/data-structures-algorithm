@@ -3,7 +3,6 @@ package com.yang.algorithm;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Description:
@@ -59,69 +58,62 @@ class Chess {
         }
     }
 
-    public void greedyStart(int row, int column, int count){
+    public void greedyStart(int row, int column, int count) {
         this.chess[row][column] = count;
         ArrayList<Point> next = next(new Point(row, column));
         sort(next);
-        while (!next.isEmpty()){
+        while (!next.isEmpty()) {
             Point remove = next.remove(0);
-            start(remove.x, remove.y, count + 1);
+            greedyStart(remove.x, remove.y, count + 1);
         }
-        if(count == end) {
+        if (count == end - 1) {
             System.out.println("finish");
-        }else {
+        } else {
             this.chess[row][column] = 0;
         }
     }
 
-    public void sort(ArrayList<Point> next){
-        next.sort((Point p1, Point p2) ->{
+    public void sort(ArrayList<Point> next) {
+        next.sort((Point p1, Point p2) -> {
             int count1 = next(p1).size();
             int count2 = next(p2).size();
-            if(count1 > count2){
+            if (count1 > count2) {
                 return 1;
-            }else if(count1 == count2){
+            } else if (count1 == count2) {
                 return 0;
-            }else {
+            } else {
                 return -1;
             }
         });
     }
 
-    private ArrayList<Point> next(Point current){
+    private ArrayList<Point> next(Point current) {
         ArrayList<Point> next = new ArrayList<>();
         Point point = new Point();
-        if((point.x = current.x -2) >= 0 && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x - 2) >= 0 && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-        if((point.x = current.x - 1) >= 0 && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x - 1) >= 0 && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
-        if((point.x = current.x + 1) < this.chess.length && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x + 1) < this.chess.length && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
-        if((point.x = current.x + 2) < this.chess.length && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x + 2) < this.chess.length && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
-        if((point.x = current.x + 2) < this.chess.length && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x + 2) < this.chess.length && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
-        if((point.x = current.x + 1) < this.chess.length && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x + 1) < this.chess.length && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
-        if((point.x = current.x - 1) >= 0 && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x - 1) >= 0 && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
-        if((point.x = current.x - 2) >= 0 && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0){
+        if ((point.x = current.x - 2) >= 0 && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0) {
             next.add(new Point(point));
         }
-
         return next;
     }
 
