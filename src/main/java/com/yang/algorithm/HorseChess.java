@@ -69,14 +69,7 @@ class Chess {
         }
         if(count == end) {
             System.out.println("finish");
-            return;
         }else {
-            if(row == 0 && column == 0){
-                System.out.println("back");
-            }
-            if(row == 2 && column == 1){
-                System.out.println("back");
-            }
             this.chess[row][column] = 0;
         }
     }
