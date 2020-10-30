@@ -22,11 +22,16 @@ public class HorseChess {
 class Chess {
     private int[][] chess;
 
+    private boolean[] visited;
+
+    private boolean finished;
+
     private int end;
 
     public Chess(int row, int column) {
         this.chess = new int[row][column];
-        end = row * column;
+        this.end = row * column;
+        this.visited = new boolean[row * column];
     }
 
     public boolean start(int row, int column, int count) {
@@ -60,16 +65,18 @@ class Chess {
 
     public void greedyStart(int row, int column, int count) {
         this.chess[row][column] = count;
+        this.visited[row * this.chess.length + column] = true;
         ArrayList<Point> next = next(new Point(row, column));
         sort(next);
         while (!next.isEmpty()) {
             Point remove = next.remove(0);
-            greedyStart(remove.x, remove.y, count + 1);
+            if (!this.visited[remove.x * this.chess.length + remove.y])
+                greedyStart(remove.x, remove.y, count + 1);
         }
-        if (count == end - 1) {
-            System.out.println("finish");
+        if (count < end & !finished) {
+            this.visited[row * this.chess.length + column] = false;
         } else {
-            this.chess[row][column] = 0;
+            finished = true;
         }
     }
 
@@ -90,30 +97,58 @@ class Chess {
     private ArrayList<Point> next(Point current) {
         ArrayList<Point> next = new ArrayList<>();
         Point point = new Point();
-        if ((point.x = current.x - 2) >= 0 && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
+
+
+        if ((point.x = current.x - 2) >= 0 && (point.y = current.y + 1) < this.chess[0].length) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x - 1) >= 0 && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x - 1) >= 0 && (point.y = current.y + 2) < this.chess[0].length) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x + 1) < this.chess.length && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x + 1) < this.chess.length && (point.y = current.y + 2) < this.chess[0].length) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x + 2) < this.chess.length && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x + 2) < this.chess.length && (point.y = current.y + 1) < this.chess[0].length) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x + 2) < this.chess.length && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x + 2) < this.chess.length && (point.y = current.y - 1) >= 0) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x + 1) < this.chess.length && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x + 1) < this.chess.length && (point.y = current.y - 2) >= 0) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x - 1) >= 0 && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x - 1) >= 0 && (point.y = current.y - 2) >= 0) {
             next.add(new Point(point));
         }
-        if ((point.x = current.x - 2) >= 0 && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0) {
+        if ((point.x = current.x - 2) >= 0 && (point.y = current.y - 1) >= 0) {
             next.add(new Point(point));
         }
+
+
+//        if((point.x = current.x -2) >= 0 && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x - 1) >= 0 && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x + 1) < this.chess.length && (point.y = current.y + 2) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x + 2) < this.chess.length && (point.y = current.y + 1) < this.chess[0].length && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x + 2) < this.chess.length && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x + 1) < this.chess.length && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x - 1) >= 0 && (point.y = current.y - 2) >= 0 && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
+//        if((point.x = current.x - 2) >= 0 && (point.y = current.y - 1) >= 0 && this.chess[point.x][point.y] == 0){
+//            next.add(new Point(point));
+//        }
         return next;
     }
 
